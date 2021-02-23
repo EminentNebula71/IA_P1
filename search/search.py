@@ -86,23 +86,24 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     startState = problem.getStartState()
-    actual = startState
     listaEstadosVisitados = []
     listaAbiertos = util.Stack()
-    listaAbiertos.push(problem.getSuccessors(actual))
+    listaAbiertos.push([(startState, 'Start', 0)])
 
-    while (problem.isGoalState(actual) is False):
+    while (listaAbiertos.isEmpty() is False):
         nextState = listaAbiertos.pop()
-        if(problem.getSuccessors(nextState[0]).isEmpty() and problem.isGoalState(nextState) is False):
+        print(nextState)
+        if(problem.isGoalState(nextState[0]) is True):
+            print("Objetivo alcanzado")
+            return listaEstadosVisitados
+        if(len(problem.getSuccessors(nextState[0][0])) == 0 or nextState[0] in listaEstadosVisitados):
             continue
-        actual = nextState
-        listaAbiertos.push(problem.getSuccessors(actual))
-        listaEstadosVisitados.append(actual)
-    return listaEstadosVisitados
+        listaEstadosVisitados.append(nextState[0])
+        for sucesor in problem.getSuccessors(nextState[0][0]):
+            listaAbiertos.push(sucesor) #Modificar para que nextState añada al final a sucesor, de forma que se tenga que comprobar sucesor en vez de nextState[0]
+        
+    return listaAbiertos
         
 
 def breadthFirstSearch(problem):
