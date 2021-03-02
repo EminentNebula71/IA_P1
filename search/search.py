@@ -102,15 +102,15 @@ def depthFirstSearch(problem):
 
     while (listaAbiertos.isEmpty() == False):
         nextState = listaAbiertos.pop()
-        print(nextState)
         if(problem.isGoalState(nextState[0][0]) is True):
             print("Objetivo alcanzado")
+            nextState[1].append(nextState[0][1])
             return nextState[1]
         if nextState[0][0] not in listaCerrados:
             listaCerrados.append(nextState[0][0])
-            listaMovimientos = nextState[1]
+            listaMovimientos = nextState[1].copy()
             listaMovimientos.append(nextState[0][1])
-            listaEstadosVisitados = nextState[2]
+            listaEstadosVisitados = nextState[2].copy()
             listaEstadosVisitados.append(nextState)
             sucesores = problem.getSuccessors(nextState[0][0])
             for sucesor in sucesores:
@@ -118,7 +118,6 @@ def depthFirstSearch(problem):
                     listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados])
         
     lista_vacia = []
-    print('hey')
     return lista_vacia
         
 
