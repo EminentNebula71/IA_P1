@@ -88,22 +88,38 @@ def depthFirstSearch(problem):
     """
     startState = problem.getStartState()
     listaEstadosVisitados = []
+    listaEstadosVisitados.append(startState)
+    listaCerrados = []
+    listaCerrados.append(startState)
     listaAbiertos = util.Stack()
-    listaAbiertos.push([(startState, 'Start', 0)])
+    listaMovimientos = []
+    listaAbiertos.push([(startState, 'Start', 0), listaMovimientos,listaEstadosVisitados])
+    
+    sucesores = problem.getSuccessors(startState)
+    for sucesor in sucesores:
+        if sucesor not in listaEstadosVisitados:
+            listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados])
 
-    while (listaAbiertos.isEmpty() is False):
+    while (listaAbiertos.isEmpty() == False):
         nextState = listaAbiertos.pop()
         print(nextState)
-        if(problem.isGoalState(nextState[0]) is True):
+        if(problem.isGoalState(nextState[0][0]) is True):
             print("Objetivo alcanzado")
-            return listaEstadosVisitados
-        if(len(problem.getSuccessors(nextState[0][0])) == 0 or nextState[0] in listaEstadosVisitados):
-            continue
-        listaEstadosVisitados.append(nextState[0])
-        for sucesor in problem.getSuccessors(nextState[0][0]):
-            listaAbiertos.push(sucesor) #Modificar para que nextState añada al final a sucesor, de forma que se tenga que comprobar sucesor en vez de nextState[0]
+            return nextState[1]
+        if nextState[0][0] not in listaCerrados:
+            listaCerrados.append(nextState[0][0])
+            listaMovimientos = nextState[1]
+            listaMovimientos.append(nextState[0][1])
+            listaEstadosVisitados = nextState[2]
+            listaEstadosVisitados.append(nextState)
+            sucesores = problem.getSuccessors(nextState[0][0])
+            for sucesor in sucesores:
+                if sucesor not in listaEstadosVisitados:
+                    listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados])
         
-    return listaAbiertos
+    lista_vacia = []
+    print('hey')
+    return lista_vacia
         
 
 def breadthFirstSearch(problem):
