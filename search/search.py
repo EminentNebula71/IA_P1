@@ -123,13 +123,77 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    startState = problem.getStartState()
+    listaEstadosVisitados = []
+    listaEstadosVisitados.append(startState)
+    listaCerrados = []
+    listaCerrados.append(startState)
+    listaAbiertos = util.Queue()
+    listaMovimientos = []
+    listaAbiertos.push([(startState, 'Start', 0), listaMovimientos,listaEstadosVisitados])
+    
+    sucesores = problem.getSuccessors(startState)
+    for sucesor in sucesores:
+        if sucesor not in listaEstadosVisitados:
+            listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados])
+
+    while (listaAbiertos.isEmpty() == False):
+        nextState = listaAbiertos.pop()
+        if(problem.isGoalState(nextState[0][0]) is True):
+            print("Objetivo alcanzado")
+            nextState[1].append(nextState[0][1])
+            return nextState[1]
+        if nextState[0][0] not in listaCerrados:
+            listaCerrados.append(nextState[0][0])
+            listaMovimientos = nextState[1].copy()
+            listaMovimientos.append(nextState[0][1])
+            listaEstadosVisitados = nextState[2].copy()
+            listaEstadosVisitados.append(nextState)
+            sucesores = problem.getSuccessors(nextState[0][0])
+            for sucesor in sucesores:
+                if sucesor not in listaEstadosVisitados:
+                    listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados])
+        
+    lista_vacia = []
+    return lista_vacia
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    startState = problem.getStartState()
+    listaEstadosVisitados = []
+    listaEstadosVisitados.append(startState)
+    listaCerrados = []
+    listaCerrados.append(startState)
+    listaAbiertos = util.PriorityQueue()
+    listaMovimientos = []
+    listaAbiertos.push([(startState, 'Start', 0), listaMovimientos,listaEstadosVisitados], 0)
+
+    sucesores = problem.getSuccessors(startState)
+    for sucesor in sucesores:
+        if sucesor not in listaEstadosVisitados:
+            listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados], sucesor[2])
+
+    while (listaAbiertos.isEmpty() == False):
+        nextState = listaAbiertos.pop()
+        if(problem.isGoalState(nextState[0][0]) is True):
+            print("Objetivo alcanzado")
+            nextState[1].append(nextState[0][1])
+            return nextState[1]
+        if nextState[0][0] not in listaCerrados:
+            listaCerrados.append(nextState[0][0])
+            listaMovimientos = nextState[1].copy()
+            listaMovimientos.append(nextState[0][1])
+            listaEstadosVisitados = nextState[2].copy()
+            listaEstadosVisitados.append(nextState)
+            sucesores = problem.getSuccessors(nextState[0][0])
+            for sucesor in sucesores:
+                if sucesor not in listaEstadosVisitados:
+                    listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados], sucesor[2])
+        
+    lista_vacia = []
+    return lista_vacia
+
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -140,9 +204,39 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    startState = problem.getStartState()
+    listaEstadosVisitados = []
+    listaEstadosVisitados.append(startState)
+    listaCerrados = []
+    listaCerrados.append(startState)
+    listaAbiertos = util.Queue()
+    listaMovimientos = []
+    listaAbiertos.push([(startState, 'Start', 0), listaMovimientos,listaEstadosVisitados])
+    
+    sucesores = problem.getSuccessors(startState)
+    for sucesor in sucesores:
+        if sucesor not in listaEstadosVisitados:
+            listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados])
 
+    while (listaAbiertos.isEmpty() == False):
+        nextState = listaAbiertos.pop()
+        if(problem.isGoalState(nextState[0][0]) is True):
+            print("Objetivo alcanzado")
+            nextState[1].append(nextState[0][1])
+            return nextState[1]
+        if nextState[0][0] not in listaCerrados:
+            listaCerrados.append(nextState[0][0])
+            listaMovimientos = nextState[1].copy()
+            listaMovimientos.append(nextState[0][1])
+            listaEstadosVisitados = nextState[2].copy()
+            listaEstadosVisitados.append(nextState)
+            sucesores = problem.getSuccessors(nextState[0][0])
+            for sucesor in sucesores:
+                if sucesor not in listaEstadosVisitados:
+                    listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados])
+        
+    lista_vacia = []
+    return lista_vacia
 
 # Abbreviations
 bfs = breadthFirstSearch
