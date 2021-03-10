@@ -131,8 +131,8 @@ def breadthFirstSearch(problem):
     listaAbiertos = util.Queue()
     listaMovimientos = []
     listaAbiertos.push([(startState, 'Start', 0), listaMovimientos,listaEstadosVisitados])
-    
     sucesores = problem.getSuccessors(startState)
+    
     for sucesor in sucesores:
         if sucesor not in listaEstadosVisitados:
             listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados])
@@ -166,12 +166,12 @@ def uniformCostSearch(problem):
     listaCerrados.append(startState)
     listaAbiertos = util.PriorityQueue()
     listaMovimientos = []
-    listaAbiertos.push([(startState, 'Start', 0), listaMovimientos,listaEstadosVisitados], 0)
+    listaAbiertos.push([(startState, 'Start', 0), listaMovimientos, listaEstadosVisitados, 0], 0.0)
 
     sucesores = problem.getSuccessors(startState)
     for sucesor in sucesores:
         if sucesor not in listaEstadosVisitados:
-            listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados], sucesor[2])
+            listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados, sucesor[2]], sucesor[2])
 
     while (listaAbiertos.isEmpty() == False):
         nextState = listaAbiertos.pop()
@@ -188,7 +188,8 @@ def uniformCostSearch(problem):
             sucesores = problem.getSuccessors(nextState[0][0])
             for sucesor in sucesores:
                 if sucesor not in listaEstadosVisitados:
-                    listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados], sucesor[2])
+                    prioridad = nextState[3] + sucesor[2]
+                    listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados, prioridad], prioridad)
         
     lista_vacia = []
     return lista_vacia
@@ -203,20 +204,22 @@ def nullHeuristic(state, problem=None):
     return 0
 
 def aStarSearch(problem, heuristic=nullHeuristic):
-    """Search the node that has the lowest combined cost and heuristic first."""
+    """Search the node of least total cost first."""
     startState = problem.getStartState()
     listaEstadosVisitados = []
     listaEstadosVisitados.append(startState)
     listaCerrados = []
     listaCerrados.append(startState)
-    listaAbiertos = util.Queue()
+    listaAbiertos = util.PriorityQueue()
     listaMovimientos = []
-    listaAbiertos.push([(startState, 'Start', 0), listaMovimientos,listaEstadosVisitados])
-    
+    heur = heuristic(startState, problem)
+    listaAbiertos.push([(startState, 'Start', 0), listaMovimientos, listaEstadosVisitados, heur], heur)
+
     sucesores = problem.getSuccessors(startState)
     for sucesor in sucesores:
         if sucesor not in listaEstadosVisitados:
-            listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados])
+            heur = sucesor[2] + heuristic(sucesor[0], problem)
+            listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados, heur], heur)
 
     while (listaAbiertos.isEmpty() == False):
         nextState = listaAbiertos.pop()
@@ -233,7 +236,9 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             sucesores = problem.getSuccessors(nextState[0][0])
             for sucesor in sucesores:
                 if sucesor not in listaEstadosVisitados:
-                    listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados])
+                    camino = problem.getCostOfActions(listaMovimientos) + sucesor[2]
+                    heur = camino + heuristic(sucesor[0], problem)
+                    listaAbiertos.push([sucesor, listaMovimientos, listaEstadosVisitados, heur], heur)
         
     lista_vacia = []
     return lista_vacia
